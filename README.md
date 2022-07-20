@@ -1,1 +1,2 @@
-# this_react_blog_mern
+# MERN Blog
+ReactJS, NodeJS, ExpressJS и MongoDB
