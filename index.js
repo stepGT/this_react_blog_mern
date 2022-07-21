@@ -1,6 +1,16 @@
 import express from 'express';
 import jwt from 'jsonwebtoken';
-console.log(jwt);
+import mongoose from 'mongoose';
+
+mongoose
+  .connect('mongodb+srv://admin:wwwwww@cluster0.7nouj.mongodb.net/?retryWrites=true&w=majority')
+  .then(() => {
+    console.log('DB ok');
+  })
+  .catch((err) => {
+    console.log('DB err', err);
+  });
+//
 const app = express();
 app.use(express.json());
 app.get('/', (req, res) => {
