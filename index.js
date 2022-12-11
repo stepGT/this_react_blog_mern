@@ -3,8 +3,7 @@ import mongoose from 'mongoose';
 import multer from 'multer';
 import { registerValidation, loginValidation, postCreateValidation } from './validations.js';
 import checkAuth from './utils/checkAuth.js';
-import { getMe, login, register } from './controllers/UserController.js';
-import { create, getAll, getOne, remove, update } from './controllers/PostController.js';
+import { UserController, PostController } from './controllers/index.js';
 import handleValidationErrors from './utils/handleValidationErrors.js';
 
 mongoose
@@ -31,22 +30,28 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
-app.post('/auth/login', loginValidation, handleValidationErrors, login);
+app.post('/auth/login', loginValidation, handleValidationErrors, UserController.login);
 
-app.post('/auth/register', registerValidation, handleValidationErrors, register);
+app.post('/auth/register', registerValidation, handleValidationErrors, UserController.register);
 
-app.get('/auth/me', checkAuth, getMe);
+app.get('/auth/me', checkAuth, UserController.getMe);
 
 app.post('/upload', checkAuth, upload.single('image'), (req, res) => {
   res.json({
     url: `/uploads/${req.file.originalname}`,
   });
 });
-app.get('/posts', getAll);
-app.get('/posts/:id', getOne);
-app.post('/posts', checkAuth, postCreateValidation, handleValidationErrors, create);
-app.delete('/posts/:id', checkAuth, remove);
-app.patch('/posts/:id', checkAuth, postCreateValidation, handleValidationErrors, update);
+app.get('/posts', PostController.getAll);
+app.get('/posts/:id', PostController.getOne);
+app.post('/posts', checkAuth, postCreateValidation, handleValidationErrors, PostController.create);
+app.delete('/posts/:id', checkAuth, PostController.remove);
+app.patch(
+  '/posts/:id',
+  checkAuth,
+  postCreateValidation,
+  handleValidationErrors,
+  PostController.update,
+);
 
 app.listen(4444, (err) => {
   if (err) console.log(err);
